@@ -3,7 +3,7 @@
     <label>Id</label>
     <protected>false</protected>
     <values>
-        <field>Fields__c</field>
+        <field>Field_Name__c</field>
         <value xsi:type="xsd:string">Id</value>
     </values>
 </CustomMetadata>
