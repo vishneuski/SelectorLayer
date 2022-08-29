@@ -31,4 +31,21 @@ public with sharing class LeadTriggerHandler {
             }       
         }
     }
+
+   //****************TRIGGERS PDP*********************
+   public static void updateAccount(List<Lead> leads) {
+    if (leads == null || leads.isEmpty()) return;
+    Map<String, String> leadPhoneCompanyMap = new Map<String, String>();
+
+    for (Lead lead: leads) {
+        leadPhoneCompanyMap.put(lead.Phone, lead.Company);
+    }
+
+    List<Account> accounts = Manager.getAccountsByLeadPhone(leadPhoneCompanyMap.keySet());
+    
+    if (!accounts.isEmpty()) {
+        LeadTriggerService.updateAccountCompany(accounts, leadPhoneCompanyMap);
+    } 
+    }
 }
+    
