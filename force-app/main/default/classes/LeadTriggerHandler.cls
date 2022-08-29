@@ -31,4 +31,54 @@ public with sharing class LeadTriggerHandler {
             }       
         }
     }
+
+   //****************TRIGGERS PDP*********************
+   public static void updateAccount(List<Lead> leads) {
+    if (leads == null || leads.isEmpty()) return;
+    Map<String, String> leadPhoneCompanyMap = new Map<String, String>();
+
+    for (Lead lead: leads) {
+        leadPhoneCompanyMap.put(lead.Phone, lead.Company);
+    }
+
+    List<Account> accounts = Manager.getAccountsByLeadPhone(leadPhoneCompanyMap.keySet());
+    
+    if (!accounts.isEmpty()) {
+        LeadTriggerService.updateAccountCompany(accounts, leadPhoneCompanyMap);
+    } 
+    }
+
+//    ***********************************
+//    public static void updateAccountWhenLeadUpdated(Map<Id, Lead> newLeadsMap, Map<Id, Lead> oldLeadsMap) {
+//        if (newLeadsMap == null || newLeadsMap.isEmpty()) return;
+//        Map<String, String> leadPhoneCompanyMap = new Map<String, String>();
+//
+//        for (Id leadId : newLeadsMap.keySet()) {
+//            if (oldLeadsMap.get(leadId).Company != newLeadsMap.get(leadId).Company ) {
+//                for (Lead lead: newLeadsMap.values()) {
+//                    leadPhoneCompanyMap.put(lead.Phone, lead.Company);
+//                }
+//
+//                List<Account> accounts = Manager.getAccountsByLeadPhone(leadPhoneCompanyMap.keySet());
+//                if (!accounts.isEmpty()) {
+//                    LeadTriggerService.updateAccountCompany(accounts, leadPhoneCompanyMap);
+//                }
+//            }
+//        }
+//    }
+//
+//    public static void updateAccountWhenLeadInserted(List<Lead> leads) {
+//        if (leads == null || leads.isEmpty()) return;
+//        Map<String, String> leadPhoneCompanyMap = new Map<String, String>();
+//
+//        for (Lead lead: leads) {
+//            leadPhoneCompanyMap.put(lead.Phone, lead.Company);
+//        }
+//
+//        List<Account> accounts = Manager.getAccountsByLeadPhone(leadPhoneCompanyMap.keySet());
+//        if (!accounts.isEmpty()) {
+//            LeadTriggerService.updateAccountCompany(accounts, leadPhoneCompanyMap);
+//        }
+//    }
 }
+    
