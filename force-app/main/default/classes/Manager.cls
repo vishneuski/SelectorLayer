@@ -1,7 +1,4 @@
 public without sharing class Manager {
-    public static List<Account> getAccountsByLeadPhone(Set<String> leadPhones) {
-        return [SELECT Id, Phone, Name FROM Account WHERE Phone IN: leadPhones];
-    }
 
     public static List<Contact> getContacts(String phone, String email) {
         List<Contact> contacts = [SELECT Id FROM Contact WHERE Phone = :phone OR Email = :email];
