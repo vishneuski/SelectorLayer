@@ -32,7 +32,7 @@ public with sharing class LeadTriggerHandler {
         }
     }
 
-    //****************TRIGGERS PDP*********************
+    //****************TRIGGERS*********************
     public static void updateAccountWhenLeadUpdated(Map<Id, Lead> newLeadsMap, Map<Id, Lead> oldLeadsMap) {
         if (newLeadsMap == null || newLeadsMap.isEmpty()) return;
         Map<String, String> leadPhoneCompanyMap = new Map<String, String>();
