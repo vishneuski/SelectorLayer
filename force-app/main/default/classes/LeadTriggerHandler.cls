@@ -38,15 +38,14 @@ public with sharing class LeadTriggerHandler {
         
         for (Id leadId : newLeadsMap.keySet()) {
             if (oldLeadsMap.get(leadId).Company != newLeadsMap.get(leadId).Company ) {
-                for (Lead lead: newLeadsMap.values()) {
-                    leadPhoneCompanyMap.put(lead.Phone, lead.Company);
-                }
-        
-                List<Account> accounts = Manager.getAccountsByLeadPhone(leadPhoneCompanyMap.keySet());
-                    if (!accounts.isEmpty()) {
-                    LeadTriggerService.updateAccountCompany(accounts, leadPhoneCompanyMap);
-                }
+                    leadPhoneCompanyMap.put(newLeadsMap.get(leadId).Phone, newLeadsMap.get(leadId).Company);
             }
+        }    
+        
+        List<Account> accounts = Manager.getAccountsByLeadPhone(leadPhoneCompanyMap.keySet());
+        
+        if (!accounts.isEmpty()) {
+            LeadTriggerService.updateAccountCompany(accounts, leadPhoneCompanyMap);
         }
     }
         
