@@ -31,4 +31,26 @@ public with sharing class LeadTriggerHandler {
             }       
         }
     }
+
+    public static void updateAccountWhenLeadUpdated(Map<Id, Lead> newLeadsMap, Map<Id, Lead> oldLeadsMap) {
+        if (newLeadsMap == null || newLeadsMap.isEmpty()) return;
+        Map<String, String> leadPhoneCompanyMap = new Map<String, String>();
+
+        for (Id leadId : newLeadsMap.keySet()) {
+            if (oldLeadsMap.get(leadId).Company != newLeadsMap.get(leadId).Company ) {
+                leadPhoneCompanyMap.put(newLeadsMap.get(leadId).Phone, newLeadsMap.get(leadId).Company);
+            }
+        }
+        LeadTriggerService.updateAccount(leadPhoneCompanyMap);
+    }
+
+    public static void updateAccountWhenLeadInserted(List<Lead> leads) {
+        if (leads == null || leads.isEmpty()) return;
+        Map<String, String> leadPhoneCompanyMap = new Map<String, String>();
+
+        for (Lead lead: leads) {
+            leadPhoneCompanyMap.put(lead.Phone, lead.Company);
+        }
+        LeadTriggerService.updateAccount(leadPhoneCompanyMap);
+    }
 }
