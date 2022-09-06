@@ -1,55 +1,30 @@
-public with sharing class LeadTriggerHandler {
-    public static void publishLeadPlatformEvent(List<Lead> leads) {
-        List<Event_Field__mdt> mdtEventFields = Event_Field__mdt.getAll().values();
-        List<Lead_Platform_Event__e> leadPlatformEvents = new List<Lead_Platform_Event__e>();
+public with sharing class LeadTriggerHandler extends TriggerHandler {
+    public override void afterInsert(List<SObject> newRecords, Map<Id, SObject> newRecordsMap) {
+        List<Lead> newLeads = (List<Lead>) newRecords;
+        Map<Id, Lead> newLeadsMap = (Map<Id, Lead>) newRecordsMap;
 
-        for (Lead lead: leads) {
-            Map<String, Object> populatedFields = lead.getPopulatedFieldsAsMap();
-            Map<String, Object> fieldsForEvent = new Map<String, Object>();
+        if (newLeads == null || newLeads.isEmpty()) return;
+        
+        Map<String, String> leadPhoneCompanyMap = new Map<String, String>();
 
-            for (Event_Field__mdt mdtField: mdtEventFields) {
-                if (populatedFields.containsKey(mdtField.Field_Name__c)) {
-                    fieldsForEvent.put(mdtField.Field_Name__c, populatedFields.get(mdtField.Field_Name__c));
-                }       
-            }
-            Lead_Platform_Event__e leadEvent = new Lead_Platform_Event__e(Lead_Fields__c = JSON.serialize(fieldsForEvent));
-            leadPlatformEvents.add(leadEvent);
+        for (Lead lead: newLeads) {
+            leadPhoneCompanyMap.put(lead.Phone, lead.Company);
         }
-
-        List<Database.SaveResult> results = EventBus.publish(leadPlatformEvents);
-
-        for (Database.SaveResult sr : results) {
-            if (sr.isSuccess()) {
-                System.debug('Successfully published event!');
-            } else {
-                for(Database.Error err : sr.getErrors()) {
-                    System.debug('!!!Error returned: ' +
-                                err.getStatusCode() +
-                                ' - ' +
-                                err.getMessage());
-                }
-            }       
-        }
+        LeadTriggerService.updateAccount(leadPhoneCompanyMap);
     }
 
-    public static void updateAccountWhenLeadUpdated(Map<Id, Lead> newLeadsMap, Map<Id, Lead> oldLeadsMap) {
+    public override void afterUpdate(List<SObject> oldRecords, List<SObject> newRecords, Map<Id, Sobject> oldRecordsMap, Map<Id, Sobject> newRecordsMap) {
+        Map<Id, Lead> oldLeadsMap = (Map<Id, Lead>) oldRecordsMap;
+        Map<Id, Lead> newLeadsMap = (Map<Id, Lead>) newRecordsMap;
+
         if (newLeadsMap == null || newLeadsMap.isEmpty()) return;
+
         Map<String, String> leadPhoneCompanyMap = new Map<String, String>();
 
         for (Id leadId : newLeadsMap.keySet()) {
             if (oldLeadsMap.get(leadId).Company != newLeadsMap.get(leadId).Company ) {
                 leadPhoneCompanyMap.put(newLeadsMap.get(leadId).Phone, newLeadsMap.get(leadId).Company);
             }
-        }
-        LeadTriggerService.updateAccount(leadPhoneCompanyMap);
-    }
-
-    public static void updateAccountWhenLeadInserted(List<Lead> leads) {
-        if (leads == null || leads.isEmpty()) return;
-        Map<String, String> leadPhoneCompanyMap = new Map<String, String>();
-
-        for (Lead lead: leads) {
-            leadPhoneCompanyMap.put(lead.Phone, lead.Company);
         }
         LeadTriggerService.updateAccount(leadPhoneCompanyMap);
     }
