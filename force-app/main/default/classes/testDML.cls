@@ -1,12 +1,12 @@
 public with sharing class testDML {
-    public testDML() {
+    public static void dmlSobjects() {
         list<SObject> objects = new List<SObject>();
         for (Integer i = 0; i < 50; i++) {
             objects.add(new Account(Name = 'DMLTest'));
             objects.add(new Lead(LastName='DMLTest', Company='DMLTest', Phone='43231'));
         }
-        // List<SObject> objs = sortChunks(objects);
-        objects.sort();    
+//         List<SObject> objs = sortChunks(objects);
+        objects.sort();
         insert objects;
     }
 
