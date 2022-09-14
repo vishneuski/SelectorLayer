@@ -1,6 +1,6 @@
 global with sharing class Apex_Managed_Sharing implements Database.Batchable<SObject> {
     global Database.QueryLocator start(Database.BatchableContext bc) {
-        return Database.getQueryLocator([SELECT Id FROM Lead WHERE Phone = '12345']);
+        return Database.getQueryLocator([SELECT Id FROM Lead WHERE Phone = 'SharedLead']);
     }
 
     global void execute(Database.BatchableContext bc, List<Lead> leads) {
