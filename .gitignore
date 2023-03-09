@@ -38,3 +38,10 @@ $RECYCLE.BIN/
 
 # Local environment variables
 .env
+/.idea/illuminatedCloud.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/IlluminatedCloud/Postman/OfflineSymbolTable.zip
+/manifest/package.xml
+/.idea/vcs.xml
+/.idea/runConfigurations.xml
