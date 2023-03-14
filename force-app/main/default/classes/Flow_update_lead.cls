@@ -18,7 +18,12 @@ global class Flow_update_lead {
         String fName = request[0].fName;
         String lName = request[0].lName;
 
-        Lead lead = [SELECT Id FROM Lead WHERE Email =:email LIMIT 1];
+        List<Lead> leads = [SELECT Id FROM Lead WHERE Email =:email];
+        Lead lead;
+
+        if (!leads.isEmpty()) {
+            lead = leads[0];
+        }
 
         lead.SF_skill__c = primarySkill;
         lead.SF_expirience__c = experience;
