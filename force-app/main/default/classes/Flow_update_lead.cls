@@ -29,7 +29,7 @@ global class Flow_update_lead {
         }
 
         if (!String.isEmpty(lName)) {
-            lead.LastName = fName;
+            lead.LastName = lName;
         }
 
         update lead;
