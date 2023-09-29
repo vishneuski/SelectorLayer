@@ -1,32 +1,25 @@
 @RestResource(urlMapping='/Objects/*')
 global with sharing class DynamicRestPDP {
+  @HttpPost
+  global static String doPost() {
+    System.debug('!!! Post start');
+    String jsonStr = RestContext.request.requestBody.toString();
+    System.debug('!!! Request Body ' + jsonStr);
 
-//    @HttpDelete
-//    global static void doDelete() {
-//        RestRequest req = RestContext.request;
-//        RestResponse res = RestContext.response;
-//        String accountId = req.requestURI.substring(req.requestURI.lastIndexOf('/') + 1);
-//        Account account = [SELECT Id FROM Account WHERE Id = :accountId];
-//        delete account;
-//    }
-//
-//    @HttpGet
-//    global static Account doGet() {
-//        RestRequest req = RestContext.request;
-//        RestResponse res = RestContext.response;
-//        String accountId = req.requestURI.substring(req.requestURI.lastIndexOf('/') + 1);
-//        Account result = [SELECT Id, Name, Phone, Website FROM Account WHERE Id = :accountId];
-//        return result;
-//    }
+    List<SObject> sObjects = ObjectRestService.processRecords(jsonStr);
+    System.debug('!!!sObjects List' + sObjects);
+    return 'Yes';
 
-    @HttpPost
-    global static String doPost() {
-        System.debug('!!! Post start');
-        String jsonStr = RestContext.request.requestBody.toString();
-        System.debug('!!! Request Body ' + jsonStr);
-
-        List<SObject> sObjects = ObjectRestService.dataWorker(jsonStr);
-        System.debug('!!!sObjects List' + sObjects);
-        return 'Yes';
-    }
+    // switch on RestContext.request.requestURI.substringAfterLast('/') {
+    //   when 'accounts' {
+    //     doAccountsPost();
+    //   }
+    //   when 'contacts' {
+    //     doContactsPost();
+    //   }
+    //   when else {
+    //     doObjectsPost();
+    //   }
+    // }
+  }
 }
