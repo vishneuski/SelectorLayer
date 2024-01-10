@@ -2,6 +2,12 @@ public with sharing class ObjectRestService {
   private static Map<String, Map<String, Schema.DisplayType>> objectFieldMap = new Map<String, Map<String, Schema.DisplayType>>();
   private static Map<String, List<SObject>> recordsForInsert = new Map<String, List<SObject>>();
   private static Map<String, List<SObject>> recordsForUpdate = new Map<String, List<SObject>>();
+  private static final String SUCESS_DML_RECORDS_IDS = 'recordIds';
+  private static final String DML_ERRORS = 'dmlErrors';
+  private static final String INSERT_DML = 'insert';
+  private static final String UPDATE_DML = 'update';
+  private static final String SUCCESS_STATUS = 'Success';
+  private static final String ERROR_STATUS = 'Error';
 
   public static ResponceWrapper insertRecords(String requestBody) {
     List<SObjectWrapper> sObjectWrappers = (List<SObjectWrapper>) JSON.deserialize(
@@ -28,34 +34,37 @@ public with sharing class ObjectRestService {
       recordsForInsert.get(sobjectName).add(newRecord);
     }
 
-    List<SObject> preparedRecords = ObjectRestService.prepareListOfsObjects(
-      recordsForInsert
-    );
-
-    List<Database.SaveResult> result = Database.insert(preparedRecords);
+    List<SObject> preparedRecords = prepareListOfsObjects(recordsForInsert);
+    List<Database.SaveResult> result = Database.insert(preparedRecords, false);
 
     ResponceWrapper responceWrapper = new ResponceWrapper();
-    responceWrapper.status = 'Sucess';
-    responceWrapper.dmlType = 'insert';
-    responceWrapper.processedRecordsIds = getInsertedRecordsIds(result);
-    System.debug('SAVE DATABASE RESULT  - ' + result);
+    responceWrapper.status = SUCCESS_STATUS;
+    responceWrapper.dmlType = INSERT_DML;
+
+    Map<String, List<String>> dmlResult = getDmlResult(result); 
+
+    responceWrapper.processedRecordsIds = dmlResult.get(SUCESS_DML_RECORDS_IDS);
+    responceWrapper.unprocessedRecordsErrors = dmlResult.get(DML_ERRORS);
+
     return responceWrapper;
   }
 
   public static ResponceWrapper updateRecords(String requestBody) {
     ResponceWrapper responceWrapper = new ResponceWrapper();
-    responceWrapper.status = 'Sucess';
-    responceWrapper.dmlType = 'update';
+    responceWrapper.status = SUCCESS_STATUS;
+    responceWrapper.dmlType = UPDATE_DML;
     responceWrapper.processedRecordsIds = new List<String>();
+    responceWrapper.unprocessedRecordsErrors = new List<String>();
 
     return responceWrapper;
   }
 
   public static ResponceWrapper doSmthElse(String requestBody) {
     ResponceWrapper responceWrapper = new ResponceWrapper();
-    responceWrapper.status = 'Sucess';
+    responceWrapper.status = ERROR_STATUS;
     responceWrapper.dmlType = 'smthElse';
     responceWrapper.processedRecordsIds = new List<String>();
+    responceWrapper.unprocessedRecordsErrors = new List<String>();
 
     return responceWrapper;
   }
@@ -77,11 +86,10 @@ public with sharing class ObjectRestService {
     String fieldName,
     String fieldValueAsString
   ) {
-    Schema.DisplayType fieldType;
     Object fieldValue;
     for (String key : objectFieldMap.get(sObjectName).keySet()) {
       if (fieldName == key) {
-        fieldType = objectFieldMap.get(sObjectName).get(key);
+        Schema.DisplayType fieldType = objectFieldMap.get(sObjectName).get(key);
         if (
           fieldType == Schema.DisplayType.STRING ||
           fieldType == Schema.DisplayType.URL ||
@@ -115,11 +123,22 @@ public with sharing class ObjectRestService {
     return result;
   }
 
-  public static List<String> getInsertedRecordsIds(List<Database.SaveResult> results) {
-    List<String> result = new List<String>();
-    for (Database.SaveResult dsr: results) {
-      result.add((String) dsr.getId());
+  public static Map<String, List<String>> getDmlResult(List<Database.SaveResult> results) {
+    Map<String, List<String>> result = new Map<String, List<String>> {
+      SUCESS_DML_RECORDS_IDS => new List<String>(),
+      DML_ERRORS => new List<String>()
+    };
+
+    for (Database.SaveResult sr: results) {
+      if (sr.isSuccess()) {
+        result.get(SUCESS_DML_RECORDS_IDS).add((String) sr.getId());
+      } else {
+        for(Database.Error err : sr.getErrors()) {
+          result.get(DML_ERRORS).add(err.getStatusCode() + ': ' + err.getMessage());
+        }
+      }
     }
+
     return result; 
   }
   
@@ -138,5 +157,6 @@ public with sharing class ObjectRestService {
     public String dmlType;
     public String error;
     public List<String> processedRecordsIds;
+    public List<String> unprocessedRecordsErrors;
   }
 }
