@@ -12,6 +12,7 @@ public with sharing class LeadTriggerHandler {
                     fieldsForEvent.put(mdtField.Field_Name__c, populatedFields.get(mdtField.Field_Name__c));
                 }       
             }
+
             Lead_Platform_Event__e leadEvent = new Lead_Platform_Event__e(Lead_Fields__c = JSON.serialize(fieldsForEvent));
             leadPlatformEvents.add(leadEvent);
         }
@@ -23,43 +24,9 @@ public with sharing class LeadTriggerHandler {
                 System.debug('Successfully published event!');
             } else {
                 for(Database.Error err : sr.getErrors()) {
-                    System.debug('!!!Error returned: ' +
-                                err.getStatusCode() +
-                                ' - ' +
-                                err.getMessage());
+                    System.debug('!!!Error returned: ' + err.getStatusCode() + ' - ' + err.getMessage());
                 }
             }       
-        }
-    }
-
-    public static void updateAccountWhenLeadUpdated(Map<Id, Lead> newLeadsMap, Map<Id, Lead> oldLeadsMap) {
-        if (newLeadsMap == null || newLeadsMap.isEmpty()) return;
-        Map<String, String> leadPhoneCompanyMap = new Map<String, String>();
-
-        for (Id leadId : newLeadsMap.keySet()) {
-            if (oldLeadsMap.get(leadId).Company != newLeadsMap.get(leadId).Company ) {
-                leadPhoneCompanyMap.put(newLeadsMap.get(leadId).Phone, newLeadsMap.get(leadId).Company);
-            }
-        }
-
-        List<Account> accounts = Manager.getAccountsByLeadPhone(leadPhoneCompanyMap.keySet());
-
-        if (!accounts.isEmpty()) {
-            LeadTriggerService.updateAccountCompany(accounts, leadPhoneCompanyMap);
-        }
-    }
-
-    public static void updateAccountWhenLeadInserted(List<Lead> leads) {
-        if (leads == null || leads.isEmpty()) return;
-        Map<String, String> leadPhoneCompanyMap = new Map<String, String>();
-
-        for (Lead lead: leads) {
-            leadPhoneCompanyMap.put(lead.Phone, lead.Company);
-        }
-
-        List<Account> accounts = Manager.getAccountsByLeadPhone(leadPhoneCompanyMap.keySet());
-        if (!accounts.isEmpty()) {
-            LeadTriggerService.updateAccountCompany(accounts, leadPhoneCompanyMap);
         }
     }
 }
