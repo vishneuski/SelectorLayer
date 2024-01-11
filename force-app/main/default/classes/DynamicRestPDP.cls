@@ -1,5 +1,5 @@
 @RestResource(urlMapping='/Objects/*')
-global with sharing class DynamicRestPDP {
+global without sharing class DynamicRestPDP {
   @HttpPost
   global static void doPost() {
     String jsonStr = RestContext.request.requestBody.toString();
