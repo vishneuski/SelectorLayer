@@ -245,7 +245,7 @@ public without sharing class ObjectRestService {
         },
         {
         "fieldApiName": "CloseDate",
-        "fieldValue": "Date.valueOf(System.now().addDays(1))"  
+        "fieldValue": "2024-01-12"  
         }
     ]
   }
