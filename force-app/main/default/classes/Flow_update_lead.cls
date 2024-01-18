@@ -7,6 +7,9 @@ global class Flow_update_lead {
         @InvocableVariable public String email;
         @InvocableVariable public String fName;
         @InvocableVariable public String lName;
+        @InvocableVariable public String recordId;
+        @InvocableVariable public String controlingPicklistValue;
+        @InvocableVariable public String dependingPicklistValue;
     }
 
     @InvocableMethod
@@ -17,26 +20,30 @@ global class Flow_update_lead {
         String email = request[0].email;
         String fName = request[0].fName;
         String lName = request[0].lName;
+        String recordId = request[0].recordId;
+        String controlingValue = request[0].controlingPicklistValue;
+        String dependingValue = request[0].dependingPicklistValue;
 
-        List<Lead> leads = [SELECT Id FROM Lead WHERE Email =:email];
-        Lead lead;
-
+        List<Lead> leads = [SELECT Id FROM Lead WHERE Id =:recordId];
+        
         if (!leads.isEmpty()) {
-            lead = leads[0];
+            Lead lead = leads.get(0);
+            lead.Email = email;
+            lead.SF_skill__c = primarySkill;
+            lead.SF_expirience__c = experience;
+            lead.SF_mascot__c = mascot;
+            lead.Description = 'Controling Value: ' + controlingValue + '.' +
+                               'Depending Value: ' + dependingValue + '.';
+
+            if (!String.isEmpty(fName)) {
+                lead.FirstName = fName;
+            }
+
+            if (!String.isEmpty(lName)) {
+                lead.LastName = lName;
+            }
+
+            update lead;
         }
-
-        lead.SF_skill__c = primarySkill;
-        lead.SF_expirience__c = experience;
-        lead.SF_mascot__c = mascot;
-
-        if (!String.isEmpty(fName)) {
-            lead.FirstName = fName;
-        }
-
-        if (!String.isEmpty(lName)) {
-            lead.LastName = lName;
-        }
-
-        update lead;
     }
 }
