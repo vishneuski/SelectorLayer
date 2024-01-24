@@ -43,9 +43,9 @@ global without sharing class DynamicRestPDP {
 
   private static RestResponse getOperationResponse(ObjectRestService.ResponceWrapper result) {
     RestResponse res = RestContext.response;
-    res.addHeader('Content-Type', 'application/json');
-    res.responseBody = Blob.valueOf(JSON.serialize(result));
-    res.statusCode = result.status == 'Success' ? 201 : 400;
+    // res.addHeader('Content-Type', 'application/json');
+    // res.responseBody = Blob.valueOf(JSON.serialize(result));
+    // res.statusCode = result?.status == 'Success' ? 201 : 400;
 
     return res;
   }

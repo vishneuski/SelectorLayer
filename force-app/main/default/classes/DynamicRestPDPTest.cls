@@ -2,27 +2,33 @@
 private class DynamicRestPDPTest {
 
     @isTest
-    static void myUnitTest() {
+    static void restPostTest() {
+        String accountName = 'TestAccountTest';
+
+        String testJson = '[{'+
+        '   \"objectApiName\" : \"Account\", ' + 
+        '   \"fields\" : [' +
+        '       {' +
+        '           \"fieldApiName\" : \"Name\", ' + 
+        '           \"fieldValue\" :' + '\"' + accountName + '\"' +    
+        '       }' +
+        '   ]' +
+        '}]';
+        
+
         RestRequest request = new RestRequest();
-        request.requestUri = 'https://AP24.salesforce.com/services/apexrest/Objects/insert';
+        request.requestUri = '/services/apexrest/Objects/insert';
         request.httpMethod = 'POST';
-
-        ObjectRestService.DMLRequestWrapper wrapper = new ObjectRestService.DMLRequestWrapper();
-        wrapper.objectApiName = 'Account';
-
-        List<ObjectRestService.Field> fields = new List<ObjectRestService.Field>();
-        ObjectRestService.Field field = new ObjectRestService.Field();
-        field.fieldApiName = 'Name';
-        field.fieldValue = 'TestAccountTest';
-        fields.add(field);
-        wrapper.fields =  fields;
-
-        Blob k = Blob.valueOf(JSON.serialize(wrapper));
-        request.requestBody = k;
-
         RestContext.request = request;
-        DynamicRestPDP.doPost();
+        request.requestBody = Blob.valueOf(testJson);
 
-        System.debug('!!!Account : ' + [SELECT ID, Name from Account]);
+        Test.startTest();
+        DynamicRestPDP.doPost();
+        Test.stopTest();
+
+        List<Account> accounts = [SELECT Id, Name FROM Account]; 
+
+        Assert.areEqual(1, accounts.size());
+        Assert.areEqual(accountName, accounts.get(0).Name);
     }
 }
