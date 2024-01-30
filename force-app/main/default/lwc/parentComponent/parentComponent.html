@@ -1,0 +1,18 @@
+<template>
+  <lightning-card title="PDP_LWC_PARENT_COMPONENT">
+    <button onclick={callChildMethod}>SHOW HIDDEN TEXT CHILD 2</button>
+    <div class="slds-grid">
+      <div class="slds-col">
+        <c-child-one-component value-from-parent={dataForFirstChild}>
+          <div>Unnamed_Slot - Data from Parent</div>
+        </c-child-one-component>
+      </div>
+      <div class="slds-col">
+        <c-child-two-component>
+          <span slot="firstName">Named_Slot - Test First Name From  Parent</span>
+          <input type="text">
+        </c-child-two-component>
+      </div>
+    </div>
+  </lightning-card>
+</template>

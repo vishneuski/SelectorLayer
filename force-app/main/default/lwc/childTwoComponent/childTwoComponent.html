@@ -1,0 +1,20 @@
+<template>
+    <div class="childTwo slds-border_left slds-border_bottom slds-border_right slds-border_top">
+        CHILD-TWO-COMPONENT
+        <template lwc:if={templateView}>
+            <div>
+                {dataFromJS.text}
+            </div>
+        </template>
+        <template for:each={loopData} for:item="loopItem" for:index="id">
+            <div key={loopItem.id}>{loopItem.text}</div>
+        </template>
+        <template lwc:if={showHidden}>SHOW HIDDEN TEXT API METHOD</template>
+        <p class="slds-border_top">First Name: <slot name="firstName">Default first name</slot>
+        </p>
+        <p>Last Name: <slot name="lastName">Default last name</slot>
+        </p>
+        <p>Description: <slot onslotchange={handleSlotChange}>Default description</slot>
+        </p>
+    </div>
+</template>
