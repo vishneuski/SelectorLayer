@@ -16,5 +16,18 @@
         </p>
         <p>Description: <slot onslotchange={handleSlotChange}>Default description</slot>
         </p>
+        <p>
+            <lightning-input type="text" value={inputValue} onchange={handleChangeText} label="Dispatch Text">
+            </lightning-input>
+            <lightning-button class="slds-m-top_small" variant="brand" label="Dispatch Event" title="Looks like a link"
+                onclick={dispatchTextValue}>
+            </lightning-button>
+
+        </p>
+        <p class="slds-m-top_small">
+            <lightning-button variant="brand" label="Publish" onclick={publishData}>
+            </lightning-button>
+        </p>
+
     </div>
 </template>
