@@ -1,0 +1,31 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global" controller="AuraController">
+    <aura:attribute name="result" type="String" default="No result"/>
+    <aura:attribute name="result2" type="String" default="Bound Value"/>
+    <aura:attribute name="messageFromChild" type="String"/>
+    <aura:attribute name="leads" type="Lead[]"/>
+    <lightning:card footer="Card Footer" title="AURA COMPONENT">
+        <aura:set attribute="actions">
+            <lightning:button label="getString" onclick="{!c.getDataFromController}"/>
+            <lightning:button label="getLeads" onclick="{!c.getLeadsFromController}"/>
+            <lightning:button label="changeParentAttr" onclick="{!c.changeParentAttr}"/>
+        </aura:set>
+        <p class="slds-p-horizontal_small color">
+            Parent Aura Component
+        </p>
+        Result:{!v.result} 
+        <div>
+            <aura:iteration items="{!v.leads}" var="item">
+                <p>{!item.Id}</p>
+            </aura:iteration>
+        </div>
+        <div>Event message: {!v.messageFromChild}</div>
+        <lightning:recordForm
+            recordId="00Q7Q00000I3JdWUAV"
+            objectApiName="Lead"
+            layoutType="Compact"
+            columns="2"/>
+        <div><c:AuraChildOne childAttr="{#v.result}"/></div>
+        <div><c:AuraChildTwo testEvent="{!c.handleChildEvent}"/></div>
+    </lightning:card>
+
+</aura:component>

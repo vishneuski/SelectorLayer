@@ -1,0 +1,16 @@
+<apex:page>
+    <apex:includeLightning/>
+        <div  id="compContainer" />
+    <script>
+        $Lightning.use("c:testAuraApp", function() {
+            $Lightning.createComponent(
+                "c:testVF",
+                {PassesValueFromVF:"Micro System"},
+                "compContainer",
+                function(cmp) {
+                console.log("Aura App succesfull loaded in VF page");
+              }
+          );
+        });
+    </script>
+</apex:page>

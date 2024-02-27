@@ -1,0 +1,7 @@
+<aura:component>
+    <aura:attribute name="item" type="Case"/>
+        Comments:
+        <ui:outputText value="{!v.item.Comments}"/>
+        Description:
+        <ui:outputText value="{!v.item.Description}"/>
+</aura:component>

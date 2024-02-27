@@ -1,5 +1,6 @@
-import { LightningElement, api, wire } from 'lwc';
+import { LightningElement, api, wire, track } from 'lwc';
 import { subscribe, unsubscribe, APPLICATION_SCOPE, MessageContext } from 'lightning/messageService';
+import methodName from '@salesforce/apex/LWC_Controller.methodName';
 import msgService from '@salesforce/messageChannel/test__c';
 
 export default class ChildOneComponent extends LightningElement {
@@ -23,6 +24,14 @@ export default class ChildOneComponent extends LightningElement {
 
     @wire(MessageContext)
     messageContext;
+
+    @wire(methodName,  {param: '$valueFromParent'})
+    wiredResults({error, data}) {
+        if (data) {
+            console.log(data);
+        }
+    }
+
 
     subscribeToMessageChannel() {
         this.subscription = subscribe(

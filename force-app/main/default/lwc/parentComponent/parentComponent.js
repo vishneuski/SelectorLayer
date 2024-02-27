@@ -18,4 +18,8 @@ export default class ParentComponent extends LightningElement {
     handleDispatchText(e) {
         this.valueFromChild = e.detail.detail.text;
     }
+
+    changeDataForChild() {
+        this.dataForFirstChild = 'CHANGED DATA FOR CHILD';
+    }
 }
