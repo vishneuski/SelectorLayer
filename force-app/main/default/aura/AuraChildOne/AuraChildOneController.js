@@ -8,7 +8,6 @@
                 "contact": component.get("v.newContact")
             });
         
-        // Configure the response handler for the action
         saveContactAction.setCallback(this, function(response) {
             var state = response.getState();
             if(state === "SUCCESS") {
@@ -22,7 +21,6 @@
             }
         });
 
-        // Send the request to create the new contact
         $A.enqueueAction(saveContactAction);
     }
 })
