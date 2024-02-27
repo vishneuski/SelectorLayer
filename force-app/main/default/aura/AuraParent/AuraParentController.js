@@ -37,5 +37,10 @@
         // console.log('!!!PARAMS - ', event.getParams().message);
         // cmp.set("v.messageFromChild", event.getName());
         cmp.set("v.messageFromChild", event.getParams().message);
-    }
+    },
+
+    scriptsLoaded : function(cmp, event, helper) {
+        console.log('!!!SCRIPT LOADED!!!');
+        window.sayHello();
+    },
 })

@@ -1,4 +1,6 @@
 <aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global" controller="AuraController">
+    <ltng:require scripts="{!$Resource.externalLib}"
+                  afterScriptsLoaded="{!c.scriptsLoaded}" />
     <aura:attribute name="result" type="String" default="No result"/>
     <aura:attribute name="result2" type="String" default="Bound Value"/>
     <aura:attribute name="messageFromChild" type="String"/>
