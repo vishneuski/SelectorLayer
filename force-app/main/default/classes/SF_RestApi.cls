@@ -1,5 +1,5 @@
 public with sharing class SF_RestApi {
-    public static void getListViews( String sObjectName ) {
+    public static void getSObjectDescription( String sObjectName ) {
 
         Http http = new Http();
 

@@ -1,1 +1,1 @@
-SF_RestApi.getListViews('Account');
+SF_RestApi.getSObjectDescription('Account');
