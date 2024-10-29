@@ -1,3 +1,23 @@
 .greenBackground {
     --slds-c-card-color-background: green;
 }
+
+.stylingHooksWithDesignToken {
+    --slds-c-card-color-background: var(--lwc-brandPrimary);
+    --slds-c-card-body-spacing-block-end: var(--lwc-spacingXxLarge);
+    --slds-c-card-heading-font-weight: var(--lwc-fontWeightRegular);
+}
+
+.bigmargin {
+    --slds-c-card-body-spacing-block-end: var(--lwc-spacingXxLarge);
+}
+
+.designToken {
+    margin-left: var(--lwc-spacingSmall);
+    border-color: var(--lwc-colorBorderBrand);
+}
+
+.purplecolor {
+    --slds-c-button-brand-color-background: purple;
+}
+

@@ -1,16 +1,21 @@
 <template>
-    <lightning-card title="First">
-        <p>The First Card</p>
-    </lightning-card>
-    <section class="call-to-action">
-        <lightning-card title="Second">
-            <p>The Second Card</p>
+    <div class="designToken">
+        <lightning-card class="slds-card bigmargin" title="First">
+            <p>The First Card</p>
         </lightning-card>
-        <lightning-card title="Third">
-            <p>The Third Card</p>
+        <section class="call-to-action">
+            <lightning-card class="stylingHooksWithDesignToken" title="Second">
+                <p>The Second Card</p>
+            </lightning-card>
+            <lightning-card title="Third">
+                <p>The Third Card</p>
+            </lightning-card>
+        </section>
+        <lightning-card class="greenBackground" title="Fourth">
+            <p>The Forth Card</p>
         </lightning-card>
-    </section>
-    <lightning-card class="greenBackground" title="Fourth">
-        <p>The Forth Card</p>
-    </lightning-card>
+    </div>
+    <div class="slds-var-m-left_small slds-var-m-top_large">
+        <lightning-button variant="brand" label="Brand Default Blue Button" title="Primary action" class="purplecolor"></lightning-button>
+    </div>
 </template>
